@@ -1,7 +1,8 @@
 {
 	"name": "bcrypt.pool",
 	"version": "1.0.0",
-	"keywords": [],
+	"description": "util for creating worker pools to run bcryptjs",
+	"keywords": ["bcrypt", "fork", "pool", "sharedarraybuffer", "threads", "nodejs", "util", "lib"],
 	"homepage": "https://github.com/anzerr/bcrypt.pool#readme",
 	"bugs": {
 		"url": "https://github.com/anzerr/bcrypt.pool/issues"
@@ -30,6 +31,5 @@
 	},
 	"engines": {
 		"node": ">= 0.10.0"
-	},
-	"description": ""
+	}
 }
