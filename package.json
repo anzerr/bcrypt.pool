@@ -1,0 +1,35 @@
+{
+	"name": "bcrypt.pool",
+	"version": "1.0.0",
+	"keywords": [],
+	"homepage": "https://github.com/anzerr/bcrypt.pool#readme",
+	"bugs": {
+		"url": "https://github.com/anzerr/bcrypt.pool/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:anzerr/bcrypt.pool.git"
+	},
+	"license": "MIT",
+	"author": "anzerr",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"test": "node test.js"
+	},
+	"eslintConfig": {
+		"extends": "eslint-config-basic"
+	},
+	"dependencies": {
+		"bcryptjs": "2.4.3",
+		"@anzerr/thread.node": "^1.0.5"
+	},
+	"devDependencies": {
+		"@anzerr/promise.util": "^1.0.1",
+		"eslint-config-basic": "git+ssh://git@github.com/anzerr/eslintrc.git"
+	},
+	"engines": {
+		"node": ">= 0.10.0"
+	},
+	"description": ""
+}
