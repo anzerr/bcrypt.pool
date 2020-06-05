@@ -11,15 +11,13 @@ class BcryptPool {
 
 	hash(str) {
 		if (str.length > 255) {
-			throw new Error('max str size is 255');
+			return Promise.reject(new Error('max str size is 255'));
 		}
-		const buffer = new SharedArrayBuffer(255 + 2), t = Buffer.from(str);
-		const a = new Uint8Array(buffer);
-		a[0] = this.hashRound;
-		a[1] = str.length;
-		for (let i = 0; i < t.length; i++) {
-			a[i + 2] = t[i];
-		}
+		const buffer = new SharedArrayBuffer(255 + 2), t = Buffer.from(buffer);
+		t.writeUInt8(this.hashRound);
+		t.writeUInt8(str.length, 1);
+		t.write(str, 2);
+
 		// the sumbit code is code that runs in a fork
 		return this.pool.submit(async (d) => {
 			const bcrypt = require('bcryptjs');
@@ -27,14 +25,9 @@ class BcryptPool {
 			const data = Buffer.from(d),
 				str = data.slice(2, data[1] + 2).toString(),
 				out = bcrypt.hashSync(str, data[0]);
-			Buffer.from(d).fill(0).write(out);
+			Buffer.from(d).write(out);
 		}, buffer).then(() => {
-			const b = Buffer.from(buffer);
-			for (let i = 0; i < b.length; i++) {
-				if (!b[i]) {
-					return b.slice(0, i).toString();
-				}
-			}
+			return Buffer.from(buffer).toString(undefined, 0, 60);
 		});
 	}
 
@@ -48,9 +41,10 @@ class BcryptPool {
 		const size = str.length + hash.length + 1,
 			buffer = new SharedArrayBuffer(size), 
 			t = Buffer.from(buffer);
-		t.writeInt8(str.length);
+		t.writeUInt8(str.length);
 		t.write(str, 1);
 		t.write(hash, 1 + str.length);
+
 		// the sumbit code is code that runs in a fork
 		return this.pool.submit(async (d) => {
 			const bcrypt = require('bcryptjs');
@@ -58,7 +52,7 @@ class BcryptPool {
 			const data = Buffer.from(d);
 			const str = data.toString(undefined, 1, data[0] + 1),
 				hash = data.toString(undefined, 1 + data[0], data.length);
-			data.writeInt8(bcrypt.compareSync(str, hash) ? 1 : 0);
+			data.writeUInt8(bcrypt.compareSync(str, hash) ? 1 : 0);
 		}, buffer).then(() => {
 			return Boolean(new Uint8Array(buffer)[0]);
 		});

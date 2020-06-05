@@ -2,6 +2,7 @@
 const bcrypt = require('bcryptjs'),
 	promise = require('@anzerr/promise.util'),
 	assert = require('assert'),
+	crypto = require('crypto'),
 	BcryptPool = require('./index');
 
 class Test {
@@ -57,6 +58,41 @@ class Test {
 		});
 	}
 
+	testHash(str) {
+		console.log('test str', str.length);
+		return this.pool.hash(str).then((res) => {
+			return this.pool.compare(str, res);
+		}).then((res) => {
+			assert.equal(res, true);
+			console.log('test str valid', res, str.length);
+		});
+	}
+
+	test_values() {
+		return this.testHash('test').then(() => {
+			return this.testHash(crypto.randomBytes(20).toString());
+		}).then(() => {
+			return this.testHash(crypto.randomBytes(40).toString());
+		}).then(() => {
+			return this.testHash(crypto.randomBytes(60).toString());
+		}).then(() => {
+			return this.testHash(crypto.randomBytes(80).toString());
+		}).then(() => {
+			return this.testHash(crypto.randomBytes(100).toString());
+		}).then(() => {
+			return this.testHash(crypto.randomBytes(200).toString());
+		}).then(() => {
+			return this.testHash(crypto.randomBytes(255).toString());
+		}).then(() => {
+			return this.testHash(crypto.randomBytes(300).toString()).then(() => {
+				console.log('test failed should have failed on max hash size');
+				process.exit(1);
+			}).catch((err) => {
+				assert.equal(err.toString(), 'Error: max str size is 255');
+			});
+		});
+	}
+
 	close() {
 		this.pool.close();
 	}
@@ -67,8 +103,10 @@ const t = new Test();
 t.test_pool().then(() => {
 	return t.test_raw();
 }).then(() => {
+	return t.test_values();
+}).then(() => {
 	t.close();
 }).catch((e) => {
-	console.log(e);
+	console.log('test failed', e);
 	process.exit(1);
 });
