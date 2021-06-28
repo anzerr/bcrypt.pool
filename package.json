@@ -1,6 +1,6 @@
 {
 	"name": "bcrypt.pool",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "util for creating worker pools to run bcryptjs",
 	"keywords": [
 		"bcrypt",
