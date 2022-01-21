@@ -27,16 +27,12 @@
 	"scripts": {
 		"test": "node test.js"
 	},
-	"eslintConfig": {
-		"extends": "eslint-config-basic"
-	},
 	"dependencies": {
 		"bcryptjs": "2.4.3",
 		"@anzerr/thread.node": "^1.0.5"
 	},
 	"devDependencies": {
-		"@anzerr/promise.util": "^1.0.1",
-		"eslint-config-basic": "git+ssh://git@github.com/anzerr/eslintrc.git"
+		"@anzerr/promise.util": "^1.0.1"
 	},
 	"engines": {
 		"node": ">= 0.10.0"
